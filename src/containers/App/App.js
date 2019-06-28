@@ -1,11 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Switch, Route } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Header from '../Header';
-import Sidenav from '../Sidenav';
-import Chat from '../Chat';
-import Home from '../Home';
+import Public from '../Public';
+import Private from '../Private';
+import Error from '../../components/Error';
 
 import './App.sass';
 
@@ -14,16 +13,8 @@ const App = ({ isAuth }) => {
 		<div className='app-container'>
 			<Header />
 			<main className='app-main'>
-				{isAuth ? (
-					<>
-						<Sidenav />
-						<Switch>
-							<Route path='/:channel?' component={Chat} />
-						</Switch>
-					</>
-				) : (
-					<Home />
-				)}
+				<Error />
+				{isAuth ? <Private /> : <Public />}
 			</main>
 		</div>
 	);
@@ -34,7 +25,7 @@ App.propTypes = {
 };
 
 const mapStateToProps = state => ({
-	isAuth: true, // state.user.token,
+	isAuth: !!state.login.user.token,
 });
 
 const mapDispatchToProps = {};
