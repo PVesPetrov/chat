@@ -1,17 +1,20 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, Alert } from 'react-bootstrap';
 import { isEmail, isLength } from 'validator';
 import { login } from '../../actions/login';
 import LoginContainer from '../../components/LoginContainer';
 
 const { Control, Group } = Form;
 
+const InlineError = ({ message }) => <div style={{ color: 'red' }}>{message}</div>;
+
 class Login extends Component {
 	state = {
 		email: '',
 		password: '',
+		validated: false,
 	};
 
 	handleChange = e => {
@@ -22,6 +25,7 @@ class Login extends Component {
 	handleSubmit = e => {
 		e.preventDefault();
 		const { email, password } = this.state;
+		this.setState({ validated: true });
 		const { login } = this.props;
 		if (isEmail(email) && isLength(password, { min: 6, max: 12 })) {
 			login({ email, password });
@@ -29,11 +33,11 @@ class Login extends Component {
 	};
 
 	render() {
-		const { email, password } = this.state;
+		const { email, password, validated, errors } = this.state;
 		return (
 			<LoginContainer>
 				<h3>Login</h3>
-				<Form onSubmit={this.handleSubmit}>
+				<Form noValidate onSubmit={this.handleSubmit}>
 					<Group>
 						<Control
 							type='email'
@@ -42,9 +46,7 @@ class Login extends Component {
 							onChange={this.handleChange}
 							placeholder='Email...'
 						/>
-						{isEmail(email) && (
-							<Control.Feedback type='invalid'>Enter valid email</Control.Feedback>
-						)}
+						{!isEmail(email) && validated && <InlineError message='Valid email is required.' />}
 					</Group>
 					<Group>
 						<Control
@@ -54,6 +56,9 @@ class Login extends Component {
 							onChange={this.handleChange}
 							placeholder='Password...'
 						/>
+						{!isLength(password, { min: 6, max: 14 }) && validated && (
+							<InlineError message='Password has to be between 6 and 14 digits.' />
+						)}
 					</Group>
 					<Group style={{ display: 'flex', alignContent: 'flex-end' }}>
 						<Button type='submit'>Log in</Button>

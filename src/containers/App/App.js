@@ -14,7 +14,7 @@ const App = ({ isAuth }) => {
 			<Header />
 			<main className='app-main'>
 				<Error />
-				{isAuth ? <Private /> : <Public />}
+				<div className='app-main-container'>{isAuth ? <Private /> : <Public />}</div>
 			</main>
 		</div>
 	);
