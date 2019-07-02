@@ -1,14 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Header from '../Header';
 import Public from '../Public';
 import Private from '../Private';
 import Error from '../../components/Error';
+import { connectSocket } from '../../actions/socket';
 
 import './App.sass';
 
-const App = ({ isAuth }) => {
+const App = ({ isAuth, connectSocket }) => {
+	useEffect(() => {
+		connectSocket();
+	}, []);
 	return (
 		<div className='app-container'>
 			<Header />
@@ -28,7 +32,9 @@ const mapStateToProps = state => ({
 	isAuth: !!state.login.user.token,
 });
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+	connectSocket,
+};
 
 export default connect(
 	mapStateToProps,
