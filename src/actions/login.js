@@ -4,36 +4,36 @@ import { showError } from './error';
 import history from '../history';
 
 export const login = credentials => async dispatch => {
-	dispatch({ type: c.LOGIN });
+	dispatch({ type: c.LOGIN.START });
 	try {
 		const { data } = await api.login(credentials);
 		if (!data.Error && data.token) {
-			dispatch({ type: c.LOGIN_SUCCESS, data });
+			dispatch({ type: c.LOGIN.SUCCESS, data });
 			history.push('/home');
 		} else {
 			dispatch(showError(data.Error));
-			dispatch({ type: c.LOGIN_ERROR, data });
+			dispatch({ type: c.LOGIN.ERROR, data });
 		}
 	} catch (err) {
 		dispatch(showError(err.response.data.msg));
-		dispatch({ type: c.LOGIN_ERROR, err });
+		dispatch({ type: c.LOGIN.ERROR, err });
 	}
 };
 
 export const signup = credentials => async dispatch => {
-	dispatch({ type: c.SIGNUP });
+	dispatch({ type: c.SIGNUP.START });
 	try {
 		const { data } = await api.signup(credentials);
 		if (!data.Error) {
-			dispatch({ type: c.SIGNUP_SUCCESS, data });
+			dispatch({ type: c.SIGNUP.SUCCESS, data });
 			history.push('/home');
 		} else {
 			dispatch(showError(data.Error));
-			dispatch({ type: c.SIGNUP_ERROR, data });
+			dispatch({ type: c.SIGNUP.ERROR, data });
 		}
 	} catch (err) {
 		dispatch(showError(err.response.data.msg));
-		dispatch({ type: c.SIGNUP_ERROR, err });
+		dispatch({ type: c.SIGNUP.ERROR, err });
 	}
 };
 
